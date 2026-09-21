@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockTI - Gestão de Ativos e Pedidos de TI</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- CSS Externo -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVEGAÇÃO LATERAL ESQUERDA (NAV) -->
+  <aside class="sidebar">
+    <div class="brand-header">
+      <img src="assets/logo.jpg" alt="StockTI Logo" class="brand-logo-img">
+      <div class="brand-info">
+        <h1>Stock<span>TI</span></h1>
+        <p>Asset & Supply</p>
+      </div>
+    </div>
+
+    <nav style="flex-grow: 1;">
+      <ul class="nav-menu">
+        <li class="nav-menu-item">
+          <a class="nav-link" onclick="showScreen('screen-dashboard')" id="nav-dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-menu-item">
+          <a class="nav-link active" onclick="showScreen('screen-catalogo')" id="nav-catalogo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+            Catálogo
+          </a>
+        </li>
+        <li class="nav-menu-item">
+          <a class="nav-link" onclick="showScreen('screen-pedidos')" id="nav-pedidos">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+            Meus Pedidos
+          </a>
+        </li>
+        <li class="nav-menu-item">
+          <a class="nav-link" href="#gestao-estoque">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            Gestão de Estoque
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar">TI</div>
+      <div class="user-details">
+        <span class="user-name">Carlos Oliveira</span>
+        <span class="user-role">Dev & Tech Lead</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO PRINCIPAL (MAIN) -->
+  <main class="main-content">
+    
+    <!-- CONTROLE RÁPIDO DO PROTÓTIPO ESTÁTICO (Alternância entre as telas solicitadas) -->
+    <div class="prototype-tabs">
+      <button class="tab-btn active" id="tab-catalogo" onclick="showScreen('screen-catalogo')">Tela A: Catálogo</button>
+      <button class="tab-btn" id="tab-pedidos" onclick="showScreen('screen-pedidos')">Tela B: Meus Pedidos</button>
+      <button class="tab-btn" id="tab-dashboard" onclick="showScreen('screen-dashboard')">Tela C: Dashboard Gestor</button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- TELA A: CATÁLOGO DE PRODUTOS (Visível por padrão)                         -->
+    <!-- ========================================================================= -->
+    <section id="screen-catalogo" class="app-screen">
+      <div class="view-header">
+        <div class="view-title">
+          <h2>Catálogo de Equipamentos</h2>
+          <p>Solicite periféricos, acessórios e equipamentos de TI para o seu dia a dia.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            Filtros
+          </button>
+          <button class="btn btn-primary" onclick="showScreen('screen-pedidos')">
+            Ver Meus Pedidos
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de pesquisa e categoria -->
+      <div class="filter-bar">
+        <div class="search-input-wrapper">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" class="search-input" placeholder="Buscar por notebook, monitor, periférico...">
+        </div>
+        <select class="select-filter">
+          <option>Todas as categorias</option>
+          <option>Notebooks & PCs</option>
+          <option>Monitores</option>
+          <option>Periféricos</option>
+          <option>Cabos & Acessórios</option>
+        </select>
+      </div>
+
+      <!-- CSS Grid com Cards de Produtos -->
+      <div class="catalog-grid">
+        <!-- Card 1 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Notebooks</span>
+            <div class="stock-badge">
+              <span class="stock-dot"></span> Disponível
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>
+          </div>
+          <h3 class="product-title">Dell Latitude 5440</h3>
+          <p class="product-specs">Intel Core i7 13ª Geração, 32GB RAM DDR5, 1TB SSD NVMe. Ideal para desenvolvimento pesado.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>8 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Monitores</span>
+            <div class="stock-badge">
+              <span class="stock-dot"></span> Disponível
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          </div>
+          <h3 class="product-title">Monitor UltraWide 29" LG</h3>
+          <p class="product-specs">Resolução Full HD IPS (2560x1080), 75Hz, sRGB 99%, ajuste de inclinação e HDMI duplo.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>14 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Periféricos</span>
+            <div class="stock-badge">
+              <span class="stock-dot warning"></span> Baixo Estoque
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+          </div>
+          <h3 class="product-title">Teclado Mecânico Keychron K2</h3>
+          <p class="product-specs">Wireless Bluetooth 5.1 / Type-C, Switches Gateron Brown, Layout 75% e retroiluminação RGB.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>2 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Periféricos</span>
+            <div class="stock-badge">
+              <span class="stock-dot"></span> Disponível
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2a4 4 0 0 0-4 4v12a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"></path><line x1="12" y1="6" x2="12" y2="10"></line></svg>
+          </div>
+          <h3 class="product-title">Mouse Ergonômico Logitech MX Master 3S</h3>
+          <p class="product-specs">Sensor Darkfield 8000 DPI, cliques silenciosos, scroll MagSpeed eletromagnético.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>11 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Áudio</span>
+            <div class="stock-badge">
+              <span class="stock-dot"></span> Disponível
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+          </div>
+          <h3 class="product-title">Headset Jabra Evolve2 65</h3>
+          <p class="product-specs">Cancelamento de ruído passivo, microfone com isolamento de voz, bateria de até 37h.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>6 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="product-card">
+          <div class="product-card-top">
+            <span class="product-category">Acessórios</span>
+            <div class="stock-badge">
+              <span class="stock-dot warning"></span> Baixo Estoque
+            </div>
+          </div>
+          <div class="product-icon-container">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          </div>
+          <h3 class="product-title">Dell USB-C Hub / Dockstation</h3>
+          <p class="product-specs">Suporte a dual monitor 4K, 3x USB 3.2, Gigabit Ethernet RJ-45, Power Delivery 90W.</p>
+          <div class="product-footer">
+            <span class="product-qty-avail">Qtd: <strong>1 disp.</strong></span>
+            <button class="btn btn-primary btn-sm">Solicitar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TELA B: MEUS PEDIDOS (Escondida inicialmente via style="display: none")   -->
+    <!-- ========================================================================= -->
+    <section id="screen-pedidos" class="app-screen" style="display: none;">
+      <div class="view-header">
+        <div class="view-title">
+          <h2>Meus Pedidos</h2>
+          <p>Acompanhe o status e a entrega dos equipamentos solicitados para seu workspace.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-primary" onclick="showScreen('screen-catalogo')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            Novo Pedido
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabela escura zebrada de Pedidos -->
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantidade</th>
+              <th>Data do Pedido</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="item-cell">
+                  <div class="item-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line></svg>
+                  </div>
+                  <div>
+                    <span class="item-name">Monitor UltraWide 29" LG</span>
+                    <span class="item-sub">Patrimônio: #TI-8940</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>1 un.</strong></td>
+              <td>12/10/2023</td>
+              <td>
+                <span class="badge badge-pending">
+                  <span class="badge-dot"></span>
+                  Pendente
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-cell">
+                  <div class="item-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a4 4 0 0 0-4 4v12a4 4 0 0 0 8 0V6a4 4 0 0 0-4-4z"></path></svg>
+                  </div>
+                  <div>
+                    <span class="item-name">Mouse Ergonômico Logitech MX Master 3S</span>
+                    <span class="item-sub">Patrimônio: #TI-7731</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>1 un.</strong></td>
+              <td>08/10/2023</td>
+              <td>
+                <span class="badge badge-delivered">
+                  <span class="badge-dot"></span>
+                  Entregue
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-cell">
+                  <div class="item-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path></svg>
+                  </div>
+                  <div>
+                    <span class="item-name">Headset Jabra Evolve2 65</span>
+                    <span class="item-sub">Patrimônio: #TI-6520</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>1 un.</strong></td>
+              <td>22/09/2023</td>
+              <td>
+                <span class="badge badge-delivered">
+                  <span class="badge-dot"></span>
+                  Entregue
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-cell">
+                  <div class="item-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+                  </div>
+                  <div>
+                    <span class="item-name">Adaptador USB-C Gigabit Ethernet</span>
+                    <span class="item-sub">Patrimônio: #TI-4311</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>2 un.</strong></td>
+              <td>15/09/2023</td>
+              <td>
+                <span class="badge badge-delivered">
+                  <span class="badge-dot"></span>
+                  Entregue
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="item-cell">
+                  <div class="item-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2"></rect></svg>
+                  </div>
+                  <div>
+                    <span class="item-name">Suporte Ergonômico para Notebook Alumínio</span>
+                    <span class="item-sub">Patrimônio: #TI-3209</span>
+                  </div>
+                </div>
+              </td>
+              <td><strong>1 un.</strong></td>
+              <td>03/09/2023</td>
+              <td>
+                <span class="badge badge-delivered">
+                  <span class="badge-dot"></span>
+                  Entregue
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- TELA C: DASHBOARD DO GESTOR (Escondida inicialmente via style="display: none") -->
+    <!-- ========================================================================= -->
+    <section id="screen-dashboard" class="app-screen" style="display: none;">
+      <div class="view-header">
+        <div class="view-title">
+          <h2>Painel do Gestor de TI</h2>
+          <p>Visão geral de requisições pendentes, volumetria e controle de ativos críticos.</p>
+        </div>
+        <div class="top-actions">
+          <button class="btn btn-outline">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Exportar Relatório
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 CARDS RETANGULARES NO TOPO COM KPIS -->
+      <div class="kpi-row">
+        <!-- KPI 1: 15 Pedidos Pendentes -->
+        <div class="kpi-card pending">
+          <div class="kpi-info">
+            <h3>Pedidos Pendentes</h3>
+            <div class="kpi-value">15</div>
+            <span class="kpi-subtext">Aguardando validação do gestor</span>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+        </div>
+
+        <!-- KPI 2: 2 Estoque Baixo -->
+        <div class="kpi-card warning">
+          <div class="kpi-info">
+            <h3>Estoque Baixo</h3>
+            <div class="kpi-value">2</div>
+            <span class="kpi-subtext">Itens abaixo do limite mínimo</span>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+        </div>
+
+        <!-- KPI 3: Total Ativos em Uso -->
+        <div class="kpi-card active-kpi">
+          <div class="kpi-info">
+            <h3>Ativos em Circulação</h3>
+            <div class="kpi-value">148</div>
+            <span class="kpi-subtext">Distribuídos em 4 departamentos</span>
+          </div>
+          <div class="kpi-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÇÃO DA TABELA DE PEDIDOS RECENTES -->
+      <div class="section-subtitle-bar">
+        <h3>Pedidos Recentes para Aprovação</h3>
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Mostrando as solicitações mais urgentes</span>
+      </div>
+
+      <div class="table-container">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Colaborador</th>
+              <th>Item Solicitado</th>
+              <th>Departamento</th>
+              <th>Data</th>
+              <th>Status</th>
+              <th style="text-align: right;">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <strong>Beatriz Mendes</strong><br>
+                <span class="item-sub">beatriz.mendes@stockti.com</span>
+              </td>
+              <td>Dell Latitude 5440 (1 un.)</td>
+              <td>Engenharia de Software</td>
+              <td>Hoje, 10:45</td>
+              <td>
+                <span class="badge badge-pending">
+                  <span class="badge-dot"></span>
+                  Pendente
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-secondary-neon btn-sm" onclick="this.textContent='Aprovado ✓'; this.disabled=true; this.style.opacity='0.6';">
+                  Aprovar
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Lucas Takahashi</strong><br>
+                <span class="item-sub">lucas.t@stockti.com</span>
+              </td>
+              <td>Monitor UltraWide 29" LG (1 un.)</td>
+              <td>UI/UX Design</td>
+              <td>Hoje, 09:12</td>
+              <td>
+                <span class="badge badge-pending">
+                  <span class="badge-dot"></span>
+                  Pendente
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-secondary-neon btn-sm" onclick="this.textContent='Aprovado ✓'; this.disabled=true; this.style.opacity='0.6';">
+                  Aprovar
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Mariana Rios</strong><br>
+                <span class="item-sub">mariana.rios@stockti.com</span>
+              </td>
+              <td>Teclado Mecânico Keychron K2 (1 un.)</td>
+              <td>Data & Analytics</td>
+              <td>Ontem, 16:30</td>
+              <td>
+                <span class="badge badge-pending">
+                  <span class="badge-dot"></span>
+                  Pendente
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-secondary-neon btn-sm" onclick="this.textContent='Aprovado ✓'; this.disabled=true; this.style.opacity='0.6';">
+                  Aprovar
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Guilherme Santos</strong><br>
+                <span class="item-sub">guilherme.s@stockti.com</span>
+              </td>
+              <td>Dell USB-C Hub / Dockstation (1 un.)</td>
+              <td>Infraestrutura Cloud</td>
+              <td>Ontem, 14:15</td>
+              <td>
+                <span class="badge badge-pending">
+                  <span class="badge-dot"></span>
+                  Pendente
+                </span>
+              </td>
+              <td style="text-align: right;">
+                <button class="btn btn-secondary-neon btn-sm" onclick="this.textContent='Aprovado ✓'; this.disabled=true; this.style.opacity='0.6';">
+                  Aprovar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- JS Externo -->
+  <script src="js/app.js"></script>
+</body>
+</html>
