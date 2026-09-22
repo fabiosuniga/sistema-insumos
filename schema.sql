@@ -1,18 +1,13 @@
--- ============================================================
--- schema.sql — Sistema de Requisição e Controle de Estoque
--- Compatível com Supabase (PostgreSQL 15+ / pgcrypto disponível)
--- Execute no SQL Editor do Supabase dashboard
--- ============================================================
 
 create extension if not exists pgcrypto;
 
 -- ============================================================
--- 1. TIPO ENUM DE PAPEIS (RBAC)
+-- TIPO ENUM DE PAPEIS (RBAC)
 -- ============================================================
 create type public.app_role as enum ('colaborador', 'gestor');
 
 -- ============================================================
--- 2. TABELA: profiles (perfil de usuário, 1:1 com auth.users)
+-- profiles (perfil de usuário, 1:1 com auth.users)
 -- ============================================================
 create table public.profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
@@ -21,7 +16,7 @@ create table public.profiles (
   created_at  timestamptz not null default now()
 );
 
--- Auto-cria o profile quando um usuário se registra (via trigger)
+-- Auto-cria o profile quando um usuário se registra 
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
@@ -41,7 +36,7 @@ create trigger on_auth_user_created
   for each row execute function public.handle_new_user();
 
 -- ============================================================
--- 3. FUNÇÃO AUXILIAR: "o usuário atual é gestor?" (SECURITY DEFINER)
+-- Verifica se o usuário é gestor
 -- ============================================================
 create or replace function public.is_gestor()
 returns boolean
@@ -56,7 +51,7 @@ as $$
 $$;
 
 -- ============================================================
--- 4. TABELA: items (catálogo de insumos)
+-- items (catálogo de insumos)
 -- ============================================================
 create table public.items (
   id            uuid primary key default gen_random_uuid(),
@@ -71,7 +66,7 @@ create table public.items (
 );
 
 -- ============================================================
--- 5. TABELA: requests (solicitações)
+-- requests (solicitações)
 -- ============================================================
 create table public.requests (
   id           uuid primary key default gen_random_uuid(),
@@ -91,7 +86,7 @@ create index requests_item_idx on public.requests (item_id);
 create index requests_status_idx on public.requests (status);
 
 -- ============================================================
--- 6. RN-01 — BLOQUEIO DE SOLICITAÇÃO DUPLICADA (fonte única de verdade)
+-- RN-01 — BLOQUEIO DE SOLICITAÇÃO DUPLICADA
 --    Um colaborador não pode ter 2+ pedidos "pendente" do MESMO item.
 -- ============================================================
 create unique index requests_no_duplicate_pending
@@ -99,7 +94,7 @@ create unique index requests_no_duplicate_pending
   where status = 'pendente';
 
 -- ============================================================
--- 7. TABELA: audit_logs (quem solicitou o quê e quando)
+-- audit_logs
 -- ============================================================
 create table public.audit_logs (
   id          uuid primary key default gen_random_uuid(),
@@ -115,7 +110,7 @@ create index audit_logs_actor_idx on public.audit_logs (actor_id);
 create index audit_logs_created_idx on public.audit_logs (created_at desc);
 
 -- ============================================================
--- 8. TRIGGER: RN-02 / RN-05 — entrega decrementa estoque atomicamente
+--  entrega decrementa estoque automaticamente
 -- ============================================================
 create or replace function public.handle_request_update()
 returns trigger
@@ -126,12 +121,12 @@ declare
   v_item_name text;
   v_old_stock int;
 begin
-  -- RN-05: ao marcar como 'entregue', baixar o estoque (uma só transação)
+  -- baixa no estoque quando for entregue
   if new.status = 'entregue' and old.status is distinct from 'entregue' then
     select name, stock into v_item_name, v_old_stock
       from public.items where id = new.item_id for update;
 
-    -- RN-02: impedir estoque negativo
+    -- impede o estoque negativo
     if v_old_stock < new.quantity then
       raise exception 'Estoque insuficiente para "%": disponível %, solicitado %.',
         v_item_name, v_old_stock, new.quantity
@@ -141,7 +136,7 @@ begin
     update public.items set stock = stock - new.quantity, updated_at = now()
       where id = new.item_id;
 
-    -- RN-04: log da baixa
+    -- log da baixa
     insert into public.audit_logs (actor_id, action, entity, entity_id, detail)
     values (auth.uid(), 'request.delivered', 'request', new.id,
             jsonb_build_object('item_id', new.item_id, 'item_name', v_item_name,
@@ -186,7 +181,7 @@ create trigger trg_request_insert
   after insert on public.requests
   for each row execute function public.handle_request_insert();
 
--- Trigger de log em mudanças de itens (RN-04)
+-- Trigger de log em mudanças de itens
 create or replace function public.handle_item_change()
 returns trigger
 language plpgsql
@@ -210,7 +205,7 @@ create trigger trg_item_change
   for each row execute function public.handle_item_change();
 
 -- ============================================================
--- 9. ROW LEVEL SECURITY (RLS)
+-- ROW LEVEL SECURITY (RLS)
 -- ============================================================
 
 alter table public.profiles   enable row level security;
@@ -218,19 +213,25 @@ alter table public.items      enable row level security;
 alter table public.requests   enable row level security;
 alter table public.audit_logs enable row level security;
 
+-- ===============================
 -- ---------- profiles ----------
+-- ==============================
+
 -- Todo usuário autenticado lê os perfis (necessário p/ mostrar nomes)
 create policy profiles_select on public.profiles
   for select to authenticated using (true);
 
--- Cada um edita apenas o próprio perfil (exceto role — protegida)
+-- Cada um edita apenas o próprio perfil
 create policy profiles_update_own on public.profiles
   for update to authenticated
   using (id = auth.uid())
   with check (id = auth.uid() and role = (select role from public.profiles where id = auth.uid()));
 
+-- ==============================
 -- ---------- items ----------
--- Colaborador: SOMENTE LEITURA de itens ativos (catálogo)
+-- ==============================
+
+-- Colaborador: SOMENTE LEITURA de itens ativos
 create policy items_select_active on public.items
   for select to authenticated using (is_gestor() or is_active = true);
 
@@ -242,7 +243,10 @@ create policy items_update_gestor on public.items
 create policy items_delete_gestor on public.items
   for delete to authenticated using (is_gestor());
 
+-- =================================================
 -- ---------- requests (REGRA CENTRAL) ----------
+-- ==================================================
+
 -- SELECT: colaborador vê SÓ os próprios pedidos; gestor vê tudo
 create policy requests_select on public.requests
   for select to authenticated
@@ -260,19 +264,21 @@ create policy requests_update on public.requests
   with check (is_gestor() or (user_id = auth.uid() and status = 'cancelado'));
 
 -- DELETE: ninguém apaga pedidos (histórico preservado); gestor "desativa" via status
--- (sem policy de DELETE => ninguém pode deletar)
 
+-- ==============================
 -- ---------- audit_logs ----------
+-- ==============================
+
 -- SOMENTE o gestor lê os logs
 create policy audit_logs_select_gestor on public.audit_logs
   for select to authenticated using (is_gestor());
 
--- Escrita em logs só acontece via SECURITY DEFINER triggers (acima)
+-- Escrita em logs só acontece via SECURITY DEFINER triggers
 create policy audit_logs_insert_trigger on public.audit_logs
   for insert to authenticated with check (actor_id = auth.uid() or is_gestor());
 
 -- ============================================================
--- 10. DADOS INICIAIS (catálogo de exemplo)
+--                          DADOS INICIAIS
 -- ============================================================
 insert into public.items (name, category, unit, stock, min_stock) values
   ('Resma de Papel A4 75g',        'Papelaria',   'resma', 120, 30),
@@ -283,7 +289,7 @@ insert into public.items (name, category, unit, stock, min_stock) values
   ('Pano Multiuso (pacote 10un)',  'Limpeza',     'kit',    25,  8);
 
 -- ============================================================
--- 11. PROMOVER O PRIMEIRO GESTOR (execute manualmente após o 1º cadastro)
+-- Promovendo o primeiro gestor do sistema
 -- ============================================================
 -- update public.profiles set role = 'gestor'
--- where id = (select id from auth.users where email = 'seu-email@empresa.com');
+-- where id = (select id from auth.users where email = 'fabiosuniga@hotmail.com');
