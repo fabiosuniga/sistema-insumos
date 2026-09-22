@@ -255,7 +255,7 @@ async function requestItem(itemId, btnEl) {
         btnEl.textContent = 'Sucesso! ✓';
         btnEl.style.backgroundColor = 'var(--secondary)';
         btnEl.style.borderColor = 'var(--secondary)';
-        loadMyRequests(); // Recarrega a lista de pedidos silenciosamente
+        loadMyRequests();
         
         // Retorna ao estado original após 2s caso queira pedir outro igual depois (embora a RN-01 bloqueie se ainda pendente)
         setTimeout(() => {
