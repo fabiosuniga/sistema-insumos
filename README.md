@@ -6,7 +6,7 @@ Sistema web simples e eficiente para gestão de estoque e solicitações de equi
 
 ---
 
-## 📸 Telas do Sistema
+## Telas do Sistema
 
 | Dashboard (Visão do Gestor) | Catálogo de Produtos |
 |:---:|:---:|
@@ -18,7 +18,7 @@ Sistema web simples e eficiente para gestão de estoque e solicitações de equi
 
 ---
 
-## ⚙️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 * **Frontend:** HTML5, CSS3, JavaScript Vanilla (Sem frameworks, sem build step)
 * **Backend / Banco de Dados:** Supabase (PostgreSQL + API REST automática)
@@ -41,10 +41,3 @@ Sistema web simples e eficiente para gestão de estoque e solicitações de equi
 - Baixa de estoque automática via **Trigger** no banco de dados ao aprovar pedidos.
 - Cadastro rápido de novos itens e inserção manual de estoque.
 
----
-
-## 🚀 Como testar localmente
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/fabiosuniga/sistema-insumos.git
