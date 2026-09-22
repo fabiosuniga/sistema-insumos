@@ -141,6 +141,14 @@ function showScreen(screenId) {
         target.style.display = 'block';
     }
 
+    // Atualiza os dados da tela correspondente sempre que o usuário navegar para ela
+    if (currentUser) {
+        if (screenId === 'screen-catalogo') loadCatalog();
+        else if (screenId === 'screen-pedidos') loadMyRequests();
+        else if (screenId === 'screen-dashboard' && currentRole === 'gestor') loadDashboard();
+        else if (screenId === 'screen-estoque' && currentRole === 'gestor') loadEstoque();
+    }
+
     // Tabs e Nav active states
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     const activeTab = document.getElementById('tab-' + screenId.replace('screen-', ''));
