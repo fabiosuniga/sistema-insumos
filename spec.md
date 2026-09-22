@@ -1,9 +1,5 @@
 # Spec — Sistema de Requisição e Controle de Estoque (Insumos Internos)
 
-**Versão:** 1.0 | **Fase:** Especificação | **Status:** Aprovada para implementação
-
----
-
 ## 1. Visão Geral
 
 Sistema web interno para eliminar sumiço de insumos (papel, toners, mouses, teclados) e solicitações duplicadas. A solução é **propositalmente simples**: dois papéis (RBAC), um fluxo de pedido único (`pendente → aprovado/entregue/cancelado`) e rastreabilidade total via logs de auditoria.
