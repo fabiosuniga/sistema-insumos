@@ -8,11 +8,11 @@ Sistema web simples e eficiente para gestão de estoque e solicitações de equi
 
 ## 📸 Telas do Sistema
 
-| Dashboard (Visão do Gestor) | Gestão de Estoque |
+| Dashboard (Visão do Gestor) | Catálogo de Produtos |
 |:---:|:---:|
 | ![Dashboard](assets/screenshot/screen-01.PNG) | ![Catálogo](assets/screenshot/screen-02.PNG) |
 
-| Meus Pedidos (Acompanhamento) | Catálogo de Produtos |
+| Meus Pedidos (Acompanhamento) | Gestão de Estoque |
 |:---:|:---:|
 | ![Meus Pedidos](assets/screenshot/screen-03.PNG) | ![Estoque](assets/screenshot/screen-04.PNG) |
 
