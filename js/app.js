@@ -349,15 +349,16 @@ async function loadDashboard() {
                   <span class="badge-dot"></span>
                   Pendente
                 </span>
-              </td>
               <td style="text-align: right;">
-                <button class="btn btn-secondary-neon btn-sm" onclick="approveRequest('${req.id}', this)">
-                  Aprovar
-                </button>
-                <button class="btn btn-danger-neon btn-sm" style="margin-left: 8px;" onclick="rejectRequest('${req.id}', this)">
-                  Recusar
-                </button>
-              </td>
+                  <div style="display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <button class="btn btn-secondary-neon btn-sm" onclick="approveRequest('${req.id}', this)">
+                      Aprovar
+                    </button>
+                    <button class="btn btn-danger-neon btn-sm" onclick="rejectRequest('${req.id}', this)">
+                      Recusar
+                    </button>
+              </div>
+            </td>
             `;
             tbody.appendChild(tr);
         });
